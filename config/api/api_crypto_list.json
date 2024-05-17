@@ -1,0 +1,14 @@
+{
+    "coin_detail": "https://www.binance.com/bapi/composite/v1/public/marketing/tardingPair/detail?symbol=",
+    "crypto_list": "https://api.coin-stats.com/v4/coins",
+    "coin-price-1w": {
+        "main": "https://api.coin-stats.com/v2/coin_chart/",
+        "name": "bitcoin",
+        "type": "1w"
+    },
+    "coin-price-24h": {
+        "main": "https://api.coin-stats.com/v2/coin_chart/",
+        "name": "bitcoin",
+        "type": "24h"
+    }
+}
