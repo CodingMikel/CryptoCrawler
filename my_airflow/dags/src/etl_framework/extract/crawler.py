@@ -1,5 +1,5 @@
 import requests
-from utils.utils import parse_api_response_to_json
+from .utils import parse_api_response_to_json
 
 class Crawler:
     def __init__(self, api_path=None):
