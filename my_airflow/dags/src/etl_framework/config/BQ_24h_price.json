@@ -1,0 +1,21 @@
+{
+    "project_name": "cloudace-project-demo",
+    "dataset_name": "crypto_data",
+    "table_name": "bitcoin_24h_price",
+    "columns": [
+        {
+            "name": "date",
+            "type": "DATE"
+        },
+        {
+            "name": "extract_time",
+            "type": "TIME"
+        },
+        {
+            "name": "price",
+            "type": "FLOAT64"
+        }
+    ],
+    "create_table": false,
+    "time_T-1": false
+}
