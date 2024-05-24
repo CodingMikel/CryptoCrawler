@@ -62,7 +62,7 @@ class ETLpipeline:
                 value = pd.DataFrame(data[date])
                 date = date.split("-")
                 cloud_filepath = "crypto_data/{}/{}/{}/{}/{}/{}/".format(extract_param, extract_length,crypto_name, date[0], date[1], date[2])
-                file_path = cloud_filepath + extract_param + "_" + extract_length + ".csv"
+                file_path = cloud_filepath + extract_param + "_" + extract_length + "test" + ".csv"
                 buffer = BytesIO()
                 with pd.io.common.get_handle(buffer, mode='w', encoding=None) as handle:
                     value.to_csv(handle.handle, index=False)
