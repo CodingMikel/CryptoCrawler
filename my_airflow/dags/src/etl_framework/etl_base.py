@@ -37,7 +37,7 @@ class ETLpipeline:
             price_store_by_date = {}
             for item in coin_price_24h_data:
                 key = datetime.fromtimestamp(item[0]).date().strftime("%Y-%m-%d")
-                value = {'extract_time': datetime.fromtimestamp(item[0]).time().strftime("%H:%M"), 'price': item[1]}
+                value = {'date': key, 'extract_time': datetime.fromtimestamp(item[0]).time().strftime("%H:%M"), 'price': item[1]}
                 if key not in price_store_by_date:
                     price_store_by_date[key] = [value]
                 price_store_by_date[key].append(value)
@@ -62,10 +62,9 @@ class ETLpipeline:
                 value = pd.DataFrame(data[date])
                 date = date.split("-")
                 cloud_filepath = "crypto_data/{}/{}/{}/{}/{}/{}/".format(extract_param, extract_length,crypto_name, date[0], date[1], date[2])
-                file_path = cloud_filepath + extract_param + "_" + extract_length + ".csv.gz"
-                print(file_path)
+                file_path = cloud_filepath + extract_param + "_" + extract_length + ".csv"
                 buffer = BytesIO()
-                with pd.io.common.get_handle(buffer, compression='gzip', mode='w', encoding=None) as handle:
+                with pd.io.common.get_handle(buffer, mode='w', encoding=None) as handle:
                     value.to_csv(handle.handle, index=False)
                 buffer.seek(0)
                 
