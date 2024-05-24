@@ -57,12 +57,12 @@ class ETLpipeline:
                     value.to_csv(file_path, index=False, compression='gzip')
                 elif data_filetype == '.csv':
                     value.to_csv(file_path, index=False)
-        elif platform == "cloud" and data is not None and extract_param == "price" and extract_length == "24h":
+        elif platform == "cloud" and data is not None:
             for date in data:
                 value = pd.DataFrame(data[date])
                 date = date.split("-")
                 cloud_filepath = "crypto_data/{}/{}/{}/{}/{}/{}/".format(extract_param, extract_length,crypto_name, date[0], date[1], date[2])
-                file_path = cloud_filepath + extract_param + "_" + extract_length + "test" + ".csv"
+                file_path = cloud_filepath + extract_param + "_" + extract_length + ".csv"
                 buffer = BytesIO()
                 with pd.io.common.get_handle(buffer, mode='w', encoding=None) as handle:
                     value.to_csv(handle.handle, index=False)
