@@ -24,7 +24,7 @@ def etl_crypto_daily_price():
     @task
     def load(extract_data: list):
         print("Load to google cloud storage")
-        ETL_object.load(platform="cloud", data=extract_data, data_filetype='.csv.gz', cloud_bucket='raw-crypto-data', crypto_name='bitcoin', extract_param='price', extract_length='24h')
+        ETL_object.load(platform="cloud", data=extract_data, data_filetype='.csv', cloud_bucket='raw-crypto-data', crypto_name='bitcoin', extract_param='price', extract_length='24h')
         
     crypto_daily_data= extract()
     load(crypto_daily_data)
