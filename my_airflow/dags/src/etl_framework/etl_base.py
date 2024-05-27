@@ -48,7 +48,7 @@ class ETLpipeline:
             for date in data:
                 value = pd.DataFrame(data[date])
                 date = date.split("-")
-                local_filepath = "coin_data/{}/{}/{}/{}/".format(crypto_name, date[0], date[1], date[2])
+                local_filepath = "coin_data/{}/year={}/month={}/day={}/".format(crypto_name, date[0], date[1], date[2])
                 
                 # Create the directory if it does not exist
                 os.makedirs(local_filepath, exist_ok=True)
@@ -61,7 +61,7 @@ class ETLpipeline:
             for date in data:
                 value = pd.DataFrame(data[date])
                 date = date.split("-")
-                cloud_filepath = "crypto_data/{}/{}/{}/{}/{}/{}/".format(extract_param, extract_length,crypto_name, date[0], date[1], date[2])
+                cloud_filepath = "crypto_data/{}/{}/{}/year={}/month={}/day={}/".format(extract_param, extract_length,crypto_name, date[0], date[1], date[2])
                 file_path = cloud_filepath + extract_param + "_" + extract_length + ".csv"
                 buffer = BytesIO()
                 with pd.io.common.get_handle(buffer, mode='w', encoding=None) as handle:

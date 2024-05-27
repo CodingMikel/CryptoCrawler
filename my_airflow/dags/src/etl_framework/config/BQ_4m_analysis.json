@@ -1,7 +1,7 @@
 {
     "project_name": "cloudace-project-demo",
     "dataset_name": "crypto_data",
-    "table_name": "bitcoin_24h_price",
+    "table_name": "bitcoin_4m_analysis",
     "columns": [
         {
             "name": "date",
