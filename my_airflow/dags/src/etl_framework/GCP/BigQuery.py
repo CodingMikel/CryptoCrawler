@@ -97,7 +97,7 @@ class BigQuery:
         
         # Get yesterday's date
         yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
-        folder_date = yesterday.strftime("%Y/%m/%d")
+        folder_date = yesterday.strftime("year=%Y/month=%m/day=%d")
         print(folder_date)
         folder_path = f"{folder_name}{folder_date}"
         print(folder_path)
