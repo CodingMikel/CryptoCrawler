@@ -31,19 +31,6 @@ def etl_crypto_analysis_4m():
         epoch_time = extract_data['updateTimestamp']
         print(epoch_time)
         ETL_object.load(platform="cloud", data=extract_data, data_filetype='.csv', cloud_bucket='raw-crypto-data', crypto_name='bitcoin', extract_param='analysis', extract_length='4m', epoch_time=epoch_time)
-        
-    # @task
-    # def import_to_bq():
-    #     config_data = read_file_json('/opt/airflow/dags/src/etl_framework/config/BQ_4m_analysis.json')
-    #     service_account_info = read_file_json('/opt/airflow/dags/src/etl_framework/config/cloudace-project-demo-cloud-storage-key.json')
-    #     credentials = service_account.Credentials.from_service_account_info(service_account_info)
-    #     big_query = BigQuery(config=config_data, credentials=credentials)
-    #     if config_data['create_table']:
-    #         big_query.create_table()
-    #     if config_data['time_T-1']:
-    #         big_query.load_from_gcs(bucket_name='raw-crypto-data', folder_name='crypto_data/analysis/4m/bitcoin/', storage_credentials=credentials)
-    #     else:
-    #         big_query.load_all_from_gcs(bucket_name='raw-crypto-data', folder_name='crypto_data/analysis/4m/bitcoin/', storage_credentials=credentials)
     
     crypto_daily_data= extract()
     load(crypto_daily_data)
