@@ -8,4 +8,7 @@ class Crawler:
     def crawl(self):
         response = requests.get(self.api_path)
         response_json = parse_api_response_to_json(response=response)
-        return response_json['data']
+        if 'data' in response_json:
+            return response_json['data']
+        else:
+            return response_json
