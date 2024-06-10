@@ -21,7 +21,7 @@ ETL_object = ETLpipeline(api_path="https://api.coin-stats.com/v2/fear-greed")
 def etl_btc_fear_greed():
     @task.bash
     def extract():
-        return f"gcloud compute ssh --zone=asia-southeast1-c airflow-demo-project-cloudace --command \"python3 cloud-ace-demo-project/CryptoCrawler/my_airflow/pipeline_script/btc_fear_greed_daily_script.py\""
+        return f"gcloud compute ssh --zone=asia-southeast1-c airflow-demo-project-cloudace --command \"python3 /opt/airflow/pipeline_script/btc_fear_greed_daily_script.py\""
     
     extract()
 etl_btc_fear_greed()
