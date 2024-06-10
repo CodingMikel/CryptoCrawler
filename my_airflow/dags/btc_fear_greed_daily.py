@@ -1,27 +1,55 @@
 import json
-from src.etl_framework.GCP.BigQuery import BigQuery
-import pendulum
-from datetime import datetime
-import pandas as pd
+from airflow import DAG
+from airflow.models import Connection
+from airflow.providers.google.cloud.hooks.compute_ssh import ComputeEngineSSHHook
+from airflow.providers.ssh.operators.ssh import SSHOperator
+from airflow.utils.dates import days_ago
+from airflow.utils.db import provide_session
 import os
-from src.etl_framework.utils.utils import read_file_json
-from google.oauth2 import service_account
-from src.etl_framework.etl_base import ETLpipeline
-from airflow.decorators import dag, task
 
+# Replace with your actual values
+GCE_INSTANCE_NAME = 'airflow-demo-project-cloudace'
+LOCATION = 'asia-southeast1-c'
+SSH_USER = 'minhnguyen'
+PROJECT_ID = 'cloudace-project-demo' 
+IMPERSONATION_CHAIN = "cloud-storage-sa@cloudace-project-demo.iam.gserviceaccount.com"
+credential_path = "/opt/airflow/dags/src/etl_framework/config/cloudace-project-demo-cloud-storage-key.json"
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
+# Define default arguments
+default_args = {
+    'owner': 'airflow',
+    'start_date': days_ago(1),
+}
 
-ETL_object = ETLpipeline(api_path="https://api.coin-stats.com/v2/fear-greed")
-
-@dag(
-    schedule_interval='0 0 * * *',
-    start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
-    catchup=False,
+# Define the DAG
+dag = DAG(
+    'gce_ssh_dag',
+    default_args=default_args,
+    description='A simple DAG to run a script on a GCE instance',
+    schedule_interval=None,
 )
 
-def etl_btc_fear_greed():
-    @task.bash
-    def extract():
-        return f"gcloud compute ssh --zone=asia-southeast1-c airflow-demo-project-cloudace --command \"python3 /opt/airflow/pipeline_script/btc_fear_greed_daily_script.py\""
-    
-    extract()
-etl_btc_fear_greed()
+# Define the SSH hook
+ssh_hook = ComputeEngineSSHHook(
+    user=SSH_USER,
+    instance_name=GCE_INSTANCE_NAME,
+    zone=LOCATION,
+    gcp_conn_id='google-gce',
+    project_id=PROJECT_ID,
+    use_oslogin=False, 
+    use_iap_tunnel=False, 
+    cmd_timeout=100,
+    impersonation_chain=IMPERSONATION_CHAIN,
+)
+
+# Task to SSH and run the script on the GCE instance
+run_script = SSHOperator(
+    task_id='run_script',
+    ssh_hook=ssh_hook,
+    command="echo hello",
+    dag=dag,
+)
+
+run_script
+
+print("hello")
