@@ -21,7 +21,7 @@ with DAG(
     'trigger_with_http_operator',
     default_args=default_args,
     description='A simple HTTP operator example DAG',
-    schedule_interval='* * * * *',
+    schedule_interval='0 0 * * *',
     start_date=days_ago(1),
     tags=['example'],
 ) as dag:
