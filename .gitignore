@@ -11,3 +11,5 @@ coin_data
 #environment
 
 venv
+
+my_airflow/.env
