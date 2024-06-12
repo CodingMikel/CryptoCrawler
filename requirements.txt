@@ -5,4 +5,5 @@ apache-airflow==2.9.1
 apache-airflow-providers-google
 google-cloud-bigquery
 tenacity
+python-dotenv
 #VERSION_STRING=5:26.1.0-1~ubuntu.24.04~noble
