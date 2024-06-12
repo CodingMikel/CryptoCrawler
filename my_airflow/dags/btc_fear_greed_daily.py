@@ -1,55 +1,40 @@
-import json
 from airflow import DAG
-from airflow.models import Connection
-from airflow.providers.google.cloud.hooks.compute_ssh import ComputeEngineSSHHook
-from airflow.providers.ssh.operators.ssh import SSHOperator
+from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.utils.dates import days_ago
-from airflow.utils.db import provide_session
+import json
+from dotenv import load_dotenv
 import os
 
-# Replace with your actual values
-GCE_INSTANCE_NAME = 'airflow-demo-project-cloudace'
-LOCATION = 'asia-southeast1-c'
-SSH_USER = 'minhnguyen'
-PROJECT_ID = 'cloudace-project-demo' 
-IMPERSONATION_CHAIN = "cloud-storage-sa@cloudace-project-demo.iam.gserviceaccount.com"
-credential_path = "/opt/airflow/dags/src/etl_framework/config/cloudace-project-demo-cloud-storage-key.json"
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
-# Define default arguments
+load_dotenv()
+
 default_args = {
     'owner': 'airflow',
-    'start_date': days_ago(1),
+    'depends_on_past': False,
+    'email_on_failure': False,
+    'email_on_retry': False,
 }
 
-# Define the DAG
-dag = DAG(
-    'gce_ssh_dag',
+auth_token = os.getenv("AUTH_TOKEN")
+auth_token = str(auth_token)
+
+with DAG(
+    'trigger_with_http_operator',
     default_args=default_args,
-    description='A simple DAG to run a script on a GCE instance',
-    schedule_interval=None,
-)
+    description='A simple HTTP operator example DAG',
+    schedule_interval='* * * * *',
+    start_date=days_ago(1),
+    tags=['example'],
+) as dag:
 
-# Define the SSH hook
-ssh_hook = ComputeEngineSSHHook(
-    user=SSH_USER,
-    instance_name=GCE_INSTANCE_NAME,
-    zone=LOCATION,
-    gcp_conn_id='google-gce',
-    project_id=PROJECT_ID,
-    use_oslogin=False, 
-    use_iap_tunnel=False, 
-    cmd_timeout=100,
-    impersonation_chain=IMPERSONATION_CHAIN,
-)
+    trigger_task = SimpleHttpOperator(
+        task_id='invoke_cloud_function',
+        http_conn_id='http_default',
+        method='GET',
+        endpoint='/test-1',
+        data=json.dumps({'message': 'Triggered from Airflow!'}),
+        headers={"Content-Type": "application/json", "Authorization": "Bearer " + auth_token},
+        response_check=lambda response: response.status_code == 200,
+        log_response=True,
+    )
 
-# Task to SSH and run the script on the GCE instance
-run_script = SSHOperator(
-    task_id='run_script',
-    ssh_hook=ssh_hook,
-    command="echo hello",
-    dag=dag,
-)
-
-run_script
-
-print("hello")
+    trigger_task
