@@ -30,7 +30,7 @@ with DAG(
         task_id='invoke_cloud_function',
         http_conn_id='http_default',
         method='GET',
-        endpoint='/test-1',
+        endpoint='/fear-and-greed',
         data=json.dumps({'message': 'Triggered from Airflow!'}),
         headers={"Content-Type": "application/json", "Authorization": "Bearer " + auth_token},
         response_check=lambda response: response.status_code == 200,
