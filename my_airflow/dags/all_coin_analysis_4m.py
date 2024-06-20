@@ -15,7 +15,7 @@ default_args = {
 @dag(
     default_args=default_args,
     description='All coin analysis',
-    schedule_interval='0 0 * * *',
+    schedule_interval='*/4 * * * *',
     start_date=days_ago(1),
     tags=['example']
 )
