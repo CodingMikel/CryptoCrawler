@@ -5,6 +5,7 @@ import time
 import requests
 from airflow.decorators import dag, task
 from airflow.utils.log.secrets_masker import mask_secret
+from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
 
 default_args = {
     'owner': 'airflow',
@@ -83,7 +84,18 @@ def fear_and_greed_daily():
         else:
             raise Exception(f"Request failed: {response.status_code}, {response.text}")
 
+    call_curated_fear_and_greed = BigQueryInsertJobOperator(
+        task_id="call_curated_fear_and_greed",
+        configuration={
+            "query": {
+                "query": "CALL `cloudace-project-demo.crypto_data.fear_and_greed_curated`(); ",
+                "useLegacySql": False,
+            }
+        },
+        location='asia-southeast1',
+    )
+    
     id_token = get_token()
-    invoke_cloud_function(id_token)
+    invoke_cloud_function(id_token) >> call_curated_fear_and_greed
 
 fear_and_greed_daily()
