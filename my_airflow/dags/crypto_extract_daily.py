@@ -58,7 +58,7 @@ def etl_crypto_daily_price():
     )
     
     call_forcast_price_btc_24h_combine = BigQueryInsertJobOperator(
-        task_id="call_forcast_price_btc_24h",
+        task_id="call_forcast_price_btc_24h_combine",
         configuration={
             "query": {
                 "query": "CALL `cloudace-project-demo.crypto_data.bitcoin_forecast_combine`(); ",
