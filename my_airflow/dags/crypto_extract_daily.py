@@ -57,7 +57,18 @@ def etl_crypto_daily_price():
         location='asia-southeast1',
     )
     
+    call_forcast_price_btc_24h_combine = BigQueryInsertJobOperator(
+        task_id="call_forcast_price_btc_24h",
+        configuration={
+            "query": {
+                "query": "CALL `cloudace-project-demo.crypto_data.bitcoin_forecast_combine`(); ",
+                "useLegacySql": False,
+            }
+        },
+        location='asia-southeast1',
+    )
+    
     crypto_daily_data = extract()
-    load(crypto_daily_data) >> [call_insert_procedure, call_forcast_price_btc_24h]
+    load(crypto_daily_data) >> [call_insert_procedure, call_forcast_price_btc_24h, call_forcast_price_btc_24h_combine]
     
 etl_crypto_daily_price()
